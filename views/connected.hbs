@@ -1,0 +1,39 @@
+<script src="//d3js.org/d3.v3.min.js"></script>
+
+<style type="text/css">
+	
+	.links line {
+		stroke: #999;
+		stroke-opacity: 0.6;
+	}
+
+	.nodes circle {
+		stroke: #fff;
+		stroke-width: 1.5px;
+	}
+</style>
+
+<body>
+	
+	<div id="connect" class="ui container canvas draw fullwidth first-page-element">
+		<div class="input field">
+		<div class="ui fluid selection dropdown">
+				<i class="tag icon"></i>
+				<input type="hidden" name="language">
+				<span class="text">Filter</span>
+				<div class="menu">
+					<div class="item" data-value="classes">Classes</div>
+					<div class="item" data-value="majors">Majors</div>
+					<div class="item" data-value="workday">Available work day</div>
+					<div class="item" data-value="workday">Available work hour</div>
+				</div>
+			</div>
+		</div>
+		<div id="chart" class="canvas draw fullwidth">
+			
+		</div>
+	</div>
+
+
+	<script type="text/javascript" src="javascripts/graph.js"> </script>
+</body>

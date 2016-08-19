@@ -1,0 +1,44 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.node circle {
+  cursor: pointer;
+  stroke: #3182bd;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 10px sans-serif;
+  pointer-events: none;
+  text-anchor: middle;
+}
+
+line.link {
+  fill: none;
+  stroke: #9ecae1;
+  stroke-width: 1.5px;
+}
+
+div.fullwidth {
+	width:100%;
+}
+
+body .first-page-element {
+    padding-top: 80px!important;
+    /*padding-bottom: 60px!important;*/
+}
+
+ div.navbar {
+    padding-bottom: 2px!important;
+    left: 0;
+}
+
+.hidden {
+  display: none;
+}

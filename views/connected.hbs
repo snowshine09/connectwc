@@ -15,10 +15,10 @@
 
 <body>
 	
-	<div id="connect" class="ui container canvas draw fullwidth first-page-element">
+	<div id="connect" class="ui container canvas draw fullwidth first-page-element" width="50%">
 		<div class="input field">
 		<div class="ui fluid selection dropdown">
-				<i class="tag icon"></i>
+		We are connected by 
 				<input type="hidden" name="language">
 				<span class="text">Filter</span>
 				<div class="menu">
@@ -26,6 +26,7 @@
 					<div class="item" data-value="majors">Majors</div>
 					<div class="item" data-value="workday">Available work day</div>
 					<div class="item" data-value="workday">Available work hour</div>
+					<div class="item" data-value="age_range">Age range</div>
 				</div>
 			</div>
 		</div>
@@ -34,6 +35,6 @@
 		</div>
 	</div>
 
-
+	<div id="filters" class={{state}}></div>
 	<script type="text/javascript" src="javascripts/graph.js"> </script>
 </body>

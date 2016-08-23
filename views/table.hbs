@@ -1,0 +1,47 @@
+<div class="ui container center middle aligned first-page-element">
+	<div class="ui divided items students {{id}}">
+		{{#each students}}
+		<div class="item student {{this.id}}">
+			<div class="grid ui fixed container">
+				<div class="four wide column">
+					<div class="ui medium image"><img src="../images/user-icon_sm.png" alt=""></div>
+				</div>
+				<div class="ten wide column">
+					<div class="content">
+						<a href="" class="header">{{this.name}}</a>
+						<div class="description">{{this.age}}</div>
+						<div class="extra"><a href={{this.institution}} target="_blank">{{this.institution}}</a></div>
+						<div class="schema_description ui accordion ">
+							<div class="title"><i class="dropdown icon"></i>More details</div>
+							<div class="extra content">{{this.nationality}}</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+		{{/each}}
+	</div>
+	<div class="ui twelve wide column">
+		<div class="ui modal launchnext student">
+			<div class="ui text container aligned center middle padded">
+				<h3 class="ui header">Compose your message to </h3>
+				<div class="ui form">
+					<div class="two fields">
+						<div class="field">
+							<div class="ui inverted black label">You have  students(s) to initiate the idea generation from.</div>
+						</div>
+						<div class="field">
+							<div class="field"><input type="text" class="count_goal" placeholder="Enter the number of ideas targeted for each student">
+							</div>
+						</div>
+
+					</div>
+					<button class="ui button teal startidea">Confirm</button>
+					<button class="ui button teal cancelidea">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

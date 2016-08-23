@@ -4,7 +4,7 @@ $('.ui.fluid.selection.dropdown').dropdown('set selected','classes')
     // console.log(value);
     // console.log(text);
     // console.log($selectedItem);
-    update(value)
+    update(value, localStorage.getItem('filterBy'));
 
   }});
 ////draw the force graph
@@ -42,6 +42,10 @@ var svg = d3.select("#chart").append("svg")
       'id':arr[i].id,
       'gender': arr[i].gender==1?'M':'F',
       'type':'student',
+      'title': arr[i].title,
+      'institution': arr[i].institution,
+      'degree': arr[i].degree,
+      'prev_degree': arr[i].prev_degree,
       'group':groupIdx,
       'name': arr[i].name,
       'idx':nodeIdx,
@@ -92,17 +96,15 @@ var svg = d3.select("#chart").append("svg")
   // return {'nodes':nodes, 'links':links}
 }
 
-function update(LinkType){
-  // request data from the db
-  if(localStorage.getItem('allstudents'))
-  {
-    Hierarchy(localStorage.getItem('allstudents'), LinkType, DrawGraph);
-    
-    
-  }
-  else {
+function update(LinkType, filters){
+  // request data from the db with all students
+  // if(localStorage.getItem('allstudents'))
+  // {
+  //   Hierarchy(localStorage.getItem('allstudents'), LinkType, DrawGraph);
+  // }
+  // else {
     $.ajax({
-      url: "/allstudents",
+      url: "/students",
       method: "GET"
     })
     .done(function(studentsArr){
@@ -112,11 +114,11 @@ function update(LinkType){
       // console.log(bindData['links'].length);
       // DrawGraph(bindData['nodes'],bindData['links']);
     });
-  }
+  // } //for the localstorage option, temporarily disabled for now
 
 }
 
-update("classes");
+update("classes", localStorage['filterBy']);
 function DrawGraph(nodes,links) {
 
   // Restart the force layout.
@@ -148,7 +150,7 @@ function DrawGraph(nodes,links) {
   node = node.data(nodes);//, function(d) { return d.id; });
   var nodeEnter = node.enter().append("g")
   .attr("class", function(d){
-    return d.type==="student "? "student id-":"non-student id-" + d.idx + " node";
+    return d.type==="student"? "student node id-":"non-student id-" + d.idx + " node";
   })
   .on("click", click)
   .call(node_drag);
@@ -203,7 +205,7 @@ var tooltip = d3.select("#chart")
   stringHTML2=
   '</div><div class="ui blue button gotostudent" style="display: block">Click to see more!</div>';
 
-  svg.selectAll(".node")
+  svg.selectAll(".node.student")
   .attr("opacity", 1)
   .on("mouseover", function(d, i) {
     svg.selectAll(".node").transition()
@@ -225,8 +227,18 @@ var tooltip = d3.select("#chart")
       console.log(d.gender=="F");
       console.log(d.gender=="F"?"female":"male");
 
-      tooltip.html( stringHTML1 + '<div class="row">'+ d.name + '</div><div class="row"><div class="six wide column">'
-       + (d.gender=="F"?'<i class="icon female"></i>':'<i class="icon male"></i>') + '</div></div>' + stringHTML2)
+      tooltip.html(stringHTML1 + '<div class="row">'+ d.name + 
+        '</div><div class="profession row"><div class="six wide column">'
+       + '<strong>' + d.title + '</strong> at <strong>'+d.institution?d.institution:'{institution not provide}' + '</strong>' + '</div></div>' + 
+       '<div class="row country"><div class="six wide column">'
+       + 'from <strong>' + d.nationality?d.nationality:'{country not provided}'+ '</strong>' + '</div></div>' +
+       '<div class="row prev"><div class="six wide column">'
+       + 'with a ' + d.prev_degree + ' beforehand</div></div>' +
+       '<div class="row status"><div class="six wide column">'
+       + 'now working as a ' + d.degree + ' student</div></div>' +
+       '<div class="row gender"><div class="six wide column">'
+       + (d.gender=="F"?'<i class="icon female"></i>':'<i class="icon male"></i>') + '</div></div>' +
+       stringHTML2)
       .style("visibility", "visible")
       .style("left", (d3.event.pageX-$("#chart").position().left+d3.select('.tooltip').node().getBoundingClientRect()['width']/2+"px"))
       .style("top", (d3.event.pageY-$("#chart").position().top+"px"));
@@ -241,8 +253,18 @@ var tooltip = d3.select("#chart")
    d3.select(this)
    .classed("hover", false)
    .attr("stroke-width", "0px"), 
-   tooltip.html(stringHTML1 + '<div class="row">'+ d.name + '</div><div class="row"><div class="six wide column">'
-       + (d.gender=="F"?'<i class="icon female"></i>':'<i class="icon male"></i>') + '</div></div>' + stringHTML2)//stringHTML1 + '<div class="row">'+ d.name + "</div>" + stringHTML2)
+   tooltip.html(stringHTML1 + '<div class="row">'+ d.name + 
+        '</div><div class="profession row"><div class="six wide column">'
+       + '<strong>' + d.title + '</strong> at <strong>'+d.institution + '</strong>' + '</div></div>' + 
+       '<div class="row country"><div class="six wide column">'
+       + 'from <strong>' + d.nationality+ '</strong>' + '</div></div>' +
+       '<div class="row prev"><div class="six wide column">'
+       + 'with a previous' + d.prev_degree + '</div></div>' +
+       '<div class="row status"><div class="six wide column">'
+       + 'now working as a ' + d.degree + ' student</div></div>' +
+       '<div class="row gender"><div class="six wide column">'
+       + (d.gender=="F"?'<i class="icon female"></i>':'<i class="icon male"></i>') + '</div></div>' +
+       stringHTML2)//stringHTML1 + '<div class="row">'+ d.name + "</div>" + stringHTML2)
    .style("visibility", "hidden");
  })
 ////end of tooltip  

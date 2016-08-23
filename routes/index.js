@@ -18,12 +18,26 @@ router.get('/graph', function(req, res, next) {
 	res.render('connected');
 });
 
-router.get('/allstudents', function(req, res, next){
+router.get('/people',function(req, res, next) {
+	student.find({}).exec(function(err, students) {
+		res.render('table', {'students':students});
+	});
+	
+})
+
+router.get('/students', function(req, res, next){
 	console.log('all students in');
 	student.find({}).exec(function(err, students) {
 		res.send(students);
 	});
 });
+
+router.get('/filterbystate', function(req, res, next){
+	console.log('in filterbystate');
+	student.find({'RES': new RegExp(req.body.state, 'i')}, function(err, docs){
+		res.render('connected', docs);
+	});
+})
 
 router.get('/locationcount', function(req, res, next){
 	console.log('locationcount in');
@@ -32,6 +46,7 @@ router.get('/locationcount', function(req, res, next){
 		state_count[allstatesArr[i]]={};
 		state_count[allstatesArr[i]]['count']=0;
 		state_count[allstatesArr[i]]['name'] = allstates[allstatesArr[i]];
+		state_count[allstatesArr[i]]['abbr'] = allstatesArr[i];
 		state_count[allstatesArr[i]]['fillKey']='LOW';
 	}
 

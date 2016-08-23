@@ -27,11 +27,14 @@ var basic = new Datamap({
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
                 alert(geography.properties.name);
+                $.ajax({
+                	url: '/students/'+geography.properties.abbr,
+                	type: 'get'
+                })
+                .done(function(students){
+                	console.log("success, get total of " + students.length);
+                });
             });
         }
     });
 
-	// new Datamap({
-	// 	element: document.getElementById('container'),
-	// 	scope:'usa'
-	// });

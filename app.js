@@ -127,7 +127,7 @@ app.post('/userlogin', function(req, res, next) {
         student_id: user.uid
       }, function(err, result) {
         if (err) {
-          console.log("there is an err in User.findOne for PSU account log in");
+          console.log("there is an err in student.findOne for PSU account log in");
           console.err(err);
         }
         console.log("the result is" + result);
@@ -136,7 +136,6 @@ app.post('/userlogin', function(req, res, next) {
           console.log('not exist before');
           
           if (err) handleError(err);
-          console.log("new user, topics based on Na's topics");
           var localUser = new student({
             student_id: user.uid,
             name: user.displayName,

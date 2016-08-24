@@ -1,12 +1,30 @@
 //dropdown for choose types of visualized hub
-$('.ui.fluid.selection.dropdown').dropdown('set selected','classes')
+$('.connectedby').dropdown('set selected','classes')
 .dropdown({onChange: function(value, text, $selectedItem){
-    // console.log(value);
-    // console.log(text);
-    // console.log($selectedItem);
-    update(value, localStorage.getItem('filterBy'));
+  var filter = localStorage.getItem('filterBy')?JSON.parse(localStorage.getItem('filterBy'))['state']:null;
+  update(value, filter);
+}});
 
-  }});
+$(document).on('click', '.delete.icon', function(e){
+  localStorage.removeItem('filterBy');
+  // $(this).closest('.ui.label')
+  //     .transition('fade');
+  update($('.connectedby').dropdown('get value'),null)
+});
+
+if(localStorage.getItem('filterBy')){
+  console.log(localStorage.getItem('filterBy'))
+  var labels = Object.keys(JSON.parse(localStorage.getItem('filterBy'))), label=null;
+  for(var i = 0; i < labels.length; i++){
+    label = labels[i] + '=' + JSON.parse(localStorage.getItem('filterBy'))[labels[i]] 
+    $('.filtered > .menu').append('<div class="item">' + label + '</div>');
+  }
+  console.log('label is'+label);
+  $('.filtered').dropdown('set selected', label);
+}
+else $('.filtered').addClass('hidden');
+
+
 ////draw the force graph
 var width = 960,
 height = 500,
@@ -47,6 +65,8 @@ var svg = d3.select("#chart").append("svg")
       'degree': arr[i].degree,
       'prev_degree': arr[i].prev_degree,
       'group':groupIdx,
+      'nationality':arr[i].nationality,
+      'res':arr[i].RES,
       'name': arr[i].name,
       'idx':nodeIdx,
       'size':arrayType.length,
@@ -103,12 +123,17 @@ function update(LinkType, filters){
   //   Hierarchy(localStorage.getItem('allstudents'), LinkType, DrawGraph);
   // }
   // else {
+    var url_link = filters?"/students/bystate/"+filters:"/students";
+    console.log(url_link);
     $.ajax({
-      url: "/students",
+      url: url_link,
       method: "GET"
     })
     .done(function(studentsArr){
       console.log(studentsArr.length);
+      if(!studentsArr.length){
+        $('.info').removeClass('hidden');
+      }
       Hierarchy(studentsArr, LinkType, DrawGraph);
       // console.log(bindData['links']);
       // console.log(bindData['links'].length);
@@ -118,7 +143,7 @@ function update(LinkType, filters){
 
 }
 
-update("classes", localStorage['filterBy']);
+update("classes", localStorage.getItem('filterBy')?JSON.parse(localStorage.getItem('filterBy'))['state']:null);
 function DrawGraph(nodes,links) {
 
   // Restart the force layout.
@@ -188,9 +213,76 @@ function DrawGraph(nodes,links) {
   .attr("dy", ".35em")
   .attr("text-anchor", "left")
   .text(function(d, i) { 
-    console.log("this is node " + i + " enter "+ d.name)
-    return d.name; });
+    return d.name; 
+  });
   
+///pend tooltip
+var tooltip = d3.select("#chart")
+.append("div")
+.attr("class", "tooltip")
+.style("background","RGBA(251,225,230,0.63)")
+.style("position", "absolute")
+  .style("z-index", "20")//An element with greater stack order is always in front of an element with a lower stack order.
+  .style("visibility", "hidden");
+  
+  var stringHTML1 = 
+  '<div class="ui centered aligned padded grid">',
+  stringHTML2=
+  '</div><div class="ui blue button messageher" style="display: block">Click to message him/her!</div>';
+
+  svg.selectAll(".node.student")
+  .attr("opacity", 1)
+  .on("mouseover", function(d, i) {
+    svg.selectAll(".node").transition()
+    .duration(250)
+    .attr("opacity", function(d, j) {
+      return j != i ? 0.6 : 1;
+    })})
+  .on("mousemove", function(d, i) {
+    var self=d3.select(this);
+    d3.select(this)
+    .classed("hover", true)
+    .attr("stroke", "#B30000")
+    .attr("stroke-width", "0.5px");
+    // if(d.name){
+      console.log(d);
+      tooltip.html(stringHTML1 + '<div class="row"> <strong>'+ (d.name?d.name:'{name not provided}') + '</strong>'+  (d.gender=="F"?'<i class="icon female"></i>':'<i class="icon male"></i>') +
+        '</div><div class="profession row"><div class="six wide column">'
+        + '<strong>' + (d.title?d.title:'{title not provided}') + '</strong> at <strong>'+(d.institution?d.institution:'{institution not provided}') + '</strong>' + '</div></div>' + 
+        '<div class="row country"><div class="six wide column">'
+        + 'from <strong>' + (d.res?d.res:'{Residence not provided}')+ '</strong>' + '</div></div>' +
+        '<div class="row prev"><div class="six wide column">'
+        + 'with a <strong>' + (d.prev_degree?d.prev_degree:'{previous degree not provided}') + '</strong> beforehand</div></div>' +
+        '<div class="row status"><div class="six wide column">'
+        + 'now working as a ' + (d.degree?d.degree:'{degree not provided}') + ' student</div></div>' +
+        stringHTML2)
+      .style("visibility", "visible")
+      .style("left", (d3.event.pageX-$("#chart").position().left+d3.select('.tooltip').node().getBoundingClientRect()['width']/2+"px"))
+      .style("top", (d3.event.pageY-$("#chart").position().top+"px"));
+    // }
+
+  })
+  .on("mouseout", function(d, i) {
+   svg.selectAll(".node")
+   .transition()
+   .duration(250)
+   .attr("opacity", "1");
+   d3.select(this)
+   .classed("hover", false)
+   .attr("stroke-width", "0px"), 
+   tooltip.html(stringHTML1 + '<div class="row">'+ (d.name?d.name:'{name not provided}') +  (d.gender=="F"?'<i class="icon female"></i>':'<i class="icon male"></i>') +
+    '</div><div class="profession row"><div class="six wide column">'
+    + '<strong>' + (d.title?d.title:'{title not provided}') + '</strong> at <strong>'+(d.institution?d.institution:'{institution not provided}') + '</strong>' + '</div></div>' + 
+    '<div class="row country"><div class="six wide column">'
+    + 'from <strong>' + (d.res?d.res:'{Residence not provided}')+ '</strong>' + '</div></div>' +
+    '<div class="row prev"><div class="six wide column">'
+    + 'with a <strong>' + (d.prev_degree?d.prev_degree:'{previous degree not provided}') + '</strong> beforehand</div></div>' +
+    '<div class="row status"><div class="six wide column">'
+    + 'now working as a ' + (d.degree?d.degree:'{degree not provided}') + ' student</div></div>' +
+        stringHTML2)//stringHTML1 + '<div class="row">'+ d.name + "</div>" + stringHTML2)
+   .style("visibility", "hidden");
+ });
+////end of tooltip , another one for hub node
 ///pend tooltip
 var tooltip = d3.select("#chart")
 .append("div")
@@ -205,7 +297,7 @@ var tooltip = d3.select("#chart")
   stringHTML2=
   '</div><div class="ui blue button gotostudent" style="display: block">Click to see more!</div>';
 
-  svg.selectAll(".node.student")
+  svg.selectAll(".node.non-student")
   .attr("opacity", 1)
   .on("mouseover", function(d, i) {
     svg.selectAll(".node").transition()
@@ -213,36 +305,20 @@ var tooltip = d3.select("#chart")
     .attr("opacity", function(d, j) {
       return j != i ? 0.6 : 1;
     })})
-
   .on("mousemove", function(d, i) {
     var self=d3.select(this);
     d3.select(this)
     .classed("hover", true)
     .attr("stroke", "#B30000")
     .attr("stroke-width", "0.5px");
-    if(d.name){
-      console.log('d is '+d);
-      console.log(d.gender);
-      console.log(d3.select(this));
-      console.log(d.gender=="F");
-      console.log(d.gender=="F"?"female":"male");
-
-      tooltip.html(stringHTML1 + '<div class="row">'+ d.name + 
-        '</div><div class="profession row"><div class="six wide column">'
-       + '<strong>' + d.title + '</strong> at <strong>'+d.institution?d.institution:'{institution not provide}' + '</strong>' + '</div></div>' + 
-       '<div class="row country"><div class="six wide column">'
-       + 'from <strong>' + d.nationality?d.nationality:'{country not provided}'+ '</strong>' + '</div></div>' +
-       '<div class="row prev"><div class="six wide column">'
-       + 'with a ' + d.prev_degree + ' beforehand</div></div>' +
-       '<div class="row status"><div class="six wide column">'
-       + 'now working as a ' + d.degree + ' student</div></div>' +
-       '<div class="row gender"><div class="six wide column">'
-       + (d.gender=="F"?'<i class="icon female"></i>':'<i class="icon male"></i>') + '</div></div>' +
-       stringHTML2)
+    // if(d.name){
+      console.log(d);
+      tooltip.html(stringHTML1 + '<div class="row"> There are <strong> '+ (d.size) + ' </strong> students connected through '+  (d.name) +
+        '</div></div>')
       .style("visibility", "visible")
       .style("left", (d3.event.pageX-$("#chart").position().left+d3.select('.tooltip').node().getBoundingClientRect()['width']/2+"px"))
       .style("top", (d3.event.pageY-$("#chart").position().top+"px"));
-    }
+    // }
 
   })
   .on("mouseout", function(d, i) {
@@ -253,21 +329,18 @@ var tooltip = d3.select("#chart")
    d3.select(this)
    .classed("hover", false)
    .attr("stroke-width", "0px"), 
-   tooltip.html(stringHTML1 + '<div class="row">'+ d.name + 
-        '</div><div class="profession row"><div class="six wide column">'
-       + '<strong>' + d.title + '</strong> at <strong>'+d.institution + '</strong>' + '</div></div>' + 
-       '<div class="row country"><div class="six wide column">'
-       + 'from <strong>' + d.nationality+ '</strong>' + '</div></div>' +
-       '<div class="row prev"><div class="six wide column">'
-       + 'with a previous' + d.prev_degree + '</div></div>' +
-       '<div class="row status"><div class="six wide column">'
-       + 'now working as a ' + d.degree + ' student</div></div>' +
-       '<div class="row gender"><div class="six wide column">'
-       + (d.gender=="F"?'<i class="icon female"></i>':'<i class="icon male"></i>') + '</div></div>' +
-       stringHTML2)//stringHTML1 + '<div class="row">'+ d.name + "</div>" + stringHTML2)
+   tooltip.html(stringHTML1 + '<div class="row">'+ (d.name?d.name:'{name not provided}') +  (d.gender=="F"?'<i class="icon female"></i>':'<i class="icon male"></i>') +
+    '</div><div class="profession row"><div class="six wide column">'
+    + '<strong>' + (d.title?d.title:'{title not provided}') + '</strong> at <strong>'+(d.institution?d.institution:'{institution not provided}') + '</strong>' + '</div></div>' + 
+    '<div class="row country"><div class="six wide column">'
+    + 'from <strong>' + (d.res?d.res:'{Residence not provided}')+ '</strong>' + '</div></div>' +
+    '<div class="row prev"><div class="six wide column">'
+    + 'with a <strong>' + (d.prev_degree?d.prev_degree:'{previous degree not provided}') + '</strong> beforehand</div></div>' +
+    '<div class="row status"><div class="six wide column">'
+    + 'now working as a ' + (d.degree?d.degree:'{degree not provided}') + ' student</div></div>' +
+        stringHTML2)//stringHTML1 + '<div class="row">'+ d.name + "</div>" + stringHTML2)
    .style("visibility", "hidden");
- })
-////end of tooltip  
+ });
 }
 var node_drag = d3.behavior.drag()
 .on("dragstart", dragstart)

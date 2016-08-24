@@ -4,26 +4,46 @@ var student = require('../models/user.js');
 var allstates = require('../models/const.js').allstates;
 console.log("type of all states imported is "+typeof(allstates));
 
+var passport = require('passport');
+
 allstatesArr = Object.keys(allstates);
 
 
 console.log("all states imported is length "+allstatesArr);
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-	res.render('index', { title: 'Express' });
-});
+// router.get('/', function(req, res, next) {
+// 	res.render('index');
+// });
 
 router.get('/graph', function(req, res, next) {
 	res.render('connected');
 });
 
-router.get('/people',function(req, res, next) {
+router.get('/graph/:filter', function(req, res, next) {
+	res.render('connected',req.params.filter);
+});
+
+router.get('/people',function(req, res, next) { //render browsing table for all the students
 	student.find({}).exec(function(err, students) {
 		res.render('table', {'students':students});
 	});
 	
 })
+
+router.get('/students/bystate/:state', function(req, res, next){
+	console.log('filter students by state '+req.params.state);
+	console.dir(req.body);
+	student.find({'RES': new RegExp(req.params.state, 'i')}).exec(function(err, students) {
+		var rt_students = [];
+		for(var i=0; i<students.length; i++){
+			console.log(students[i].RES.split(',')[1].replace(/ /g,''));
+			if(students[i].RES.split(',')[1].replace(/ /g,'')==req.params.state)rt_students.push(students[i]);
+		}
+		console.log('There is ' + rt_students.length + 'students in state' + req.params.state)
+		res.send(rt_students);
+	});
+});
 
 router.get('/students', function(req, res, next){
 	console.log('all students in');
@@ -35,7 +55,7 @@ router.get('/students', function(req, res, next){
 router.get('/filterbystate', function(req, res, next){
 	console.log('in filterbystate');
 	student.find({'RES': new RegExp(req.body.state, 'i')}, function(err, docs){
-		res.render('connected', docs);
+		res.send(filteredstudents);
 	});
 })
 
@@ -99,5 +119,7 @@ router.get('/locationcount', function(req, res, next){
 
 router.get('/map',function(req, res, next){
 	res.render('map');
-})
+});
+
+
 module.exports = router;

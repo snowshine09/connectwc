@@ -16,25 +16,46 @@
 <body>
 	
 	<div id="connect" class="ui container canvas draw fullwidth first-page-element" width="50%">
+		
+		<div class="ui selection dropdown connectedby">
+			We are connected by 
+			<input type="hidden" name="language">
+			<span class="text">Filter</span>
+			<div class="menu">
+				<div class="item" data-value="classes">Classes</div>
+				<div class="item" data-value="majors">Majors</div>
+				<div class="item" data-value="degree">Degree progress</div>
+				<div class="item" data-value="prev_degree">Previous degree</div>
+				<div class="item" data-value="EMP_status">Employment Status</div>
+				<div class="item" data-value="workday">Available work day</div>
+				<div class="item" data-value="workday">Available work hour</div>
+				<div class="item" data-value="age_range">Age range</div>
+			</div>
+		</div>
+		<div class="ui button reset">reset</div>
 		<div class="input field">
-		<div class="ui fluid selection dropdown">
-		We are connected by 
+			<div class="ui multiple search selection dropdown filtered">
+				<i class="tag icon"></i> Filtered by
 				<input type="hidden" name="language">
-				<span class="text">Filter</span>
+				<span class="text"></span>
 				<div class="menu">
-					<div class="item" data-value="classes">Classes</div>
-					<div class="item" data-value="majors">Majors</div>
-					<div class="item" data-value="workday">Available work day</div>
-					<div class="item" data-value="workday">Available work hour</div>
-					<div class="item" data-value="age_range">Age range</div>
 				</div>
 			</div>
+		</div>
+		<div class="ui info message hidden">
+			<i class="close icon"></i>
+			<div class="header">
+				Filtered too much!
+			</div>
+			<ul class="list">
+				<li>Oops! You may select a state in which there are no Penn State students registered to this network</li>
+			</ul>
 		</div>
 		<div id="chart" class="canvas draw fullwidth">
 			
 		</div>
 	</div>
 
-	<div id="filters" class={{state}}></div>
+	
 	<script type="text/javascript" src="javascripts/graph.js"> </script>
 </body>

@@ -1,14 +1,6 @@
 var LocalStrategy    = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
+// var FacebookStrategy = require('passport-facebook').Strategy;
 var LdapStrategy = require('passport-ldapauth');
-// var OPTS = {
-//   server: {
-//     url: 'ldaps://dirapps.aset.psu.edu:636',
-//     bindCredentials: 'secret',
-//     searchBase: 'dc=psu,dc=edu',
-//     searchFilter: '(uid={{username}})'
-//   }
-// };
 var OPTS = {
   server: {
     url: 'ldap://dirapps.aset.psu.edu',
@@ -20,7 +12,7 @@ var OPTS = {
 var isValidPassword = function(user, password){
   return bCrypt.compareSync(password, user.password);
 };
-var User = require('../app/models/user');
+var User = require('../models/user');
 
 module.exports = function(passport) {
   console.log("enter passport");

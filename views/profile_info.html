@@ -1,0 +1,63 @@
+
+<form action="" class="ui form">
+  <h3 class="dividing header">
+    <div class="field">
+      <label >Name</label>
+      <div class="three fields">
+        <div class="field required"><input type="text" name="username" id="" placeholder="Username Name"></div>
+        <div class="field"><input type="text" name="firstname" id="" placeholder="First Name"></div>
+        <div class="field"><input type="text" name="lastname" id="" placeholder="Last Name"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Contact</label>
+      <div class="two fields">
+        <div class="required field"><input type="text" name="email" id="" placeholder="Email"></div>
+        <div class="field"><input type="text" name="phone" id="" placeholder="Phone"></div>
+      </div>
+      <div class="field required"><input type="text" class="password profile" name="password" placeholder="Enter your password"></div>
+    </div>
+    <div class="field">
+      <label>Security</label>
+      <div class="two fields">
+        <div class="required field"><input type="password" name="password" id="" placeholder="Enter your password"></div>
+        <div class="required field"><input type="text" name="securityquestion" id="" placeholder="Enter your security question"></div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="two fields">
+        <div class="field"><input type="password" name="repassword" id="" placeholder="Reenter your password"></div>
+        <div class="field"><input type="text" name="securityanswer" id="" placeholder="Enter your security answer"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="">More</label>
+      <div class="two fields">
+        <div class="field">
+          <div class="ui right labeled left icon input">
+            <i class="tags icon"></i>
+            <input type="text" id="addtags" placeholder="Enter your Domains of expertise">
+            <a class="ui tag blue label">
+              Add Tag
+            </a>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui right labeled left icon input">
+            <i class="tags icon"></i>
+            <input type="text" id="addtags" placeholder="Enter your fields of interests">
+            <a class="ui tag blue label">
+              Add Tag
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+     <div class="ui error message"></div>
+    <div class="field">
+      <div class="ui teal button profilesubmit">Update</div>
+    </div>
+  </h3>
+</form>
+<script type="text/javascript" src="/static/assets/js/account.js"></script>
+{% endblock %}

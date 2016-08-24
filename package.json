@@ -13,10 +13,13 @@
     "debug": "~2.2.0",
     "express": "~4.13.4",
     "express-handlebars": "^3.0.0",
+    "express-session": "^1.14.0",
     "handlebars": "^4.0.5",
     "mongoose": "^4.5.9",
     "morgan": "~1.7.0",
     "passport": "^0.3.2",
+    "passport-ldapauth": "^0.5.0",
+    "passport-local": "^1.0.0",
     "serve-favicon": "~2.3.0"
   }
 }

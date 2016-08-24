@@ -1,3 +1,4 @@
+localStorage.removeItem('filterBy');
 var map = new Datamap({
 		element: document.getElementById('container'),
 		scope:"world"
@@ -21,19 +22,29 @@ var basic = new Datamap({
 			MEDIUM: 'RGB(127,215,245)',
             defaultFill: 'RGB(194,226,237)'//,'green'
         },
-        scope: 'usa',
+        scope: 'usa',   
         dataUrl: '/locationcount',
         projection: 'mercator',
         done: function(datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-                alert(geography.properties.name);
-                $.ajax({
-                	url: '/students/'+geography.properties.abbr,
-                	type: 'get'
-                })
-                .done(function(students){
-                	console.log("success, get total of " + students.length);
-                });
+                // alert(geography.properties.name);
+                // $.ajax({
+                // 	url: '/students'+geography.properties.abbr,
+                // 	type: 'get'
+                // })
+                // .done(function(students){
+                // 	console.log("success, get total of " + students.length);
+                // });
+                if(localStorage.getItem('filterBy')!==null){
+                	var prev = JSON.parse(localStorage.getItem('filterBy'));
+                	prev['state'] = geography.id;
+                	localStorage.setItem('filterBy',JSON.stringify(prev));
+                }
+                else {
+                	localStorage.setItem('filterBy', JSON.stringify({'state':geography.id}));
+                }
+                
+                window.location.replace("/graph");
             });
         }
     });

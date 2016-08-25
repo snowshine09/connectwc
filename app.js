@@ -21,6 +21,10 @@ var app = express();
 var expressHbs = require('express-handlebars');
 
 //database connect
+// var options = {
+//   user: 'communityuser',
+//   pass: '4gVdtnBmTZ5zbKgE'
+// }
 mongoose.connect(configDB.url);
 
 //authentication
@@ -127,8 +131,8 @@ app.post('/userlogin', function(req, res, next) {
         student_id: user.uid
       }, function(err, result) {
         if (err) {
-          console.log("there is an err in student.findOne for PSU account log in");
-          console.err(err);
+          console.log("there is an err in User.findOne for PSU account log in");
+          // console.err(err);
         }
         console.log("the result is" + result);
         if (!result) {

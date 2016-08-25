@@ -12,6 +12,10 @@ $(document).on('click', '.delete.icon', function(e){
   update($('.connectedby').dropdown('get value'),null)
 });
 
+$(document).on('click', '.cancelmsg, .sendmsg', function(e){
+  $('.ui.modal.initiatemsg').modal('hide');
+})
+
 if(localStorage.getItem('filterBy')){
   console.log(localStorage.getItem('filterBy'))
   var labels = Object.keys(JSON.parse(localStorage.getItem('filterBy'))), label=null;
@@ -295,7 +299,7 @@ var tooltip = d3.select("#chart")
   var stringHTML1 = 
   '<div class="ui centered aligned padded grid">',
   stringHTML2=
-  '</div><div class="ui blue button gotostudent" style="display: block">Click to see more!</div>';
+  '</div><div class="ui blue button gotostudent" style="display: block">Click to message him/her!</div>';
 
   svg.selectAll(".node.non-student")
   .attr("opacity", 1)
@@ -392,6 +396,10 @@ function color(d) {
 // Toggle children on click.
 function click(d) { //class subject does not get hidden, neither do students whose classes are more than one
   if (d3.event.defaultPrevented) return; // ignore drag
+  $('.receiver').html(d.name);
+
+  $('.ui.modal.initiatemsg').modal('show');
+
   // if (d.type!=='student' && !d.collapsed) {//the collapsible node of different connecting subject
   //   var hideIdx = d.idx, ls = bindData['links'], hideStds = [];
   //   for(var i = 0; i < ls.length; i++){

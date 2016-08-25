@@ -1,8 +1,8 @@
 localStorage.removeItem('filterBy');
-var map = new Datamap({
-		element: document.getElementById('container'),
-		scope:"world"
-	});
+// var map = new Datamap({
+// 		element: document.getElementById('container'),
+// 		scope:"world"
+// 	});
 
 var basic = new Datamap({
 	element: document.getElementById("canvas_map"),
@@ -44,7 +44,7 @@ var basic = new Datamap({
                 	localStorage.setItem('filterBy', JSON.stringify({'state':geography.id}));
                 }
                 
-                window.location.replace("/graph");
+                window.location.href="/graph";
             });
         }
     });

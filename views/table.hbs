@@ -7,18 +7,20 @@
 					<div class="ui medium image"><img src="../images/user-icon_sm.png" alt=""></div>
 				</div>
 				<div class="ten wide column">
-					<div class="content">
-						<a href="" class="header">{{this.name}}</a>
-						<div class="description">{{this.age}}</div>
-						<div class="extra"><a href={{this.institution}} target="_blank">{{this.institution}}</a></div>
-						<div class="schema_description ui accordion ">
-							<div class="title"><i class="dropdown icon"></i>More details</div>
-							<div class="extra content">{{this.nationality}}</div>
-						</div>
+					<a href="" class="header">
+					{{this.priv_bkg}}
+					{{#if this.name}}{{this.name}}
+					{{else}}name not provided{{/if}}
+					{{this}}
+					{{title}}
+					</a>
+					<div class="description">{{this.age}}</div>
+					<div class="ui label">{{this.institution}}</div>
+					<div class="schema_description ui accordion ">
+						<div class="title"><i class="dropdown icon"></i>More details</div>
+						<div class="extra content">{{this.nationality}}</div>
 					</div>
 				</div>
-
-
 			</div>
 		</div>
 		{{/each}}
@@ -36,7 +38,6 @@
 							<div class="field"><input type="text" class="count_goal" placeholder="Enter the number of ideas targeted for each student">
 							</div>
 						</div>
-
 					</div>
 					<button class="ui button teal startidea">Confirm</button>
 					<button class="ui button teal cancelidea">Cancel</button>

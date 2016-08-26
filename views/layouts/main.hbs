@@ -12,13 +12,17 @@
 <body>
 	<div class="ui container">
 		<div class="ui menu fixed inverted page navbar grid">
-			<img src="images/banner.png" class="seven wide column">	
-			<div class="right menu nine">
-				<a href="/people" class="item">People</a>
+			<div class="seven wide column" style="background-image: url('images/banner.png');
+			background-size: contain;
+			background-position: center;
+			background-repeat: no-repeat" data-pin-nopin="true"></div>
+			<div class="right menu nine wide column">
+				{{!-- <a href="/people" class="item">People</a> --}}
 				<a href="/map" class="item">Map</a>
 				<a href="/graph" class="item">Connect</a>
-				<a href="" class="item"><i class="ui icon setting"></i>Setting</a>
-				<a href="" class="item"><i class="ui icon user"></i>{{this.name}}</a>
+				{{!-- <a href="" class="item"><i class="ui icon setting"></i>Setting</a> --}}
+				{{!-- <i class="ui icon user"></i> --}}
+				<a href="" class="item">{{this.name}}</a>
 				<a href='/logout' class='ui red label item'>Logout</a>
 				
 				

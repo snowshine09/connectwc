@@ -11,6 +11,11 @@ $(document).on('click', '.delete.icon', function(e){
   update($('.connectedby').dropdown('get value'),null)
 });
 
+$(document).on('click', '.close.icon', function(e){
+  localStorage.removeItem('filterBy');
+  $('.info').addClass('hidden');
+});
+
 $(document).on('click', '.cancelmsg, .sendmsg', function(e){
   if($(e.currentTarget).hasClass('sendmsg')){
     $.ajax({

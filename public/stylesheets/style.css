@@ -30,15 +30,28 @@ div.fullwidth {
 }
 
 body .first-page-element {
-    padding-top: 80px!important;
+    margin-top: 30px!important;
     /*padding-bottom: 60px!important;*/
 }
 
  div.navbar {
-    padding-bottom: 2px!important;
+    margin-bottom: 40px!important;
     left: 0;
 }
 
 .hidden {
   display: none;
+}
+
+.intro {
+  padding:0.2em!important;
+  /*margin:1.5em!important;*/
+}
+
+.initiatemsg > .container {
+  padding: 1.62em!important;
+}
+
+svg {
+  margin-top:5px;
 }

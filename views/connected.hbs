@@ -15,32 +15,36 @@
 
 <body>
 	
-	<div id="connect" class="ui container canvas draw fullwidth first-page-element" width="50%">
-		
-		<div class="ui selection dropdown connectedby">
-			We are connected by 
-			<input type="hidden" name="language">
-			<span class="text">Filter</span>
-			<div class="menu">
-				<div class="item" data-value="classes">Classes</div>
-				<div class="item" data-value="majors">Majors</div>
-				<div class="item" data-value="degree">Degree progress</div>
-				<div class="item" data-value="prev_degree">Previous degree</div>
-				<div class="item" data-value="EMP_status">Employment Status</div>
-				<div class="item" data-value="workday">Available work day</div>
-				<div class="item" data-value="workday">Available work hour</div>
-				<div class="item" data-value="age_range">Age range</div>
-			</div>
-		</div>
-		<div class="input field">
-			<div class="ui multiple search selection dropdown filtered">
-				<i class="tag icon"></i> Filtered by
+	<div id="connect" class="ui container canvas draw fullwidth first-page-element">
+		<div class="ui grid page">
+			<div class="ui selection dropdown connectedby">
+				We are connected by 
 				<input type="hidden" name="language">
-				<span class="text"></span>
+				<span class="text">Filter</span>
 				<div class="menu">
+					<div class="item" data-value="classes">Classes</div>
+					<div class="item" data-value="majors">Majors</div>
+					<div class="item" data-value="degree">Degree progress</div>
+					<div class="item" data-value="prev_degree">Previous degree</div>
+					<div class="item" data-value="goal">Goal</div>
+					<div class="item" data-value="kids">Kids</div>
+					<div class="item" data-value="ERL">Cohort</div>
+					<div class="item" data-value="nationality">Country</div>
+					<div class="item" data-value="EMP_status">Employment Status</div>
+					<div class="item" data-value="workday">Available work day</div>
+					<div class="item" data-value="age_range">Age range</div>
+				</div>
+			</div>
+			<div class="input field">
+				<div class="ui multiple search selection dropdown filtered">
+					<input type="hidden" name="language">
+					<span class="text">Filter by selecting a state from map view </span>
+					<div class="menu">
+					</div>
 				</div>
 			</div>
 		</div>
+		
 		<div class="ui modal initiatemsg">
 			<div class="ui text container aligned center middle padded">
 				<h3 class="ui header">Compose the message for <strong class="receiver"></strong></h3>
@@ -65,7 +69,9 @@
 				Filtered too much!
 			</div>
 			<ul class="list">
-				<li>Oops! You may select a state in which there are no Penn State students registered to this network</li>
+				<li>Oops! You may select a state in which there are no Penn State students registered to this network.</li>
+				<li>Cick <a href="/map" class="">here</a> to select other states.</li>
+				<li>You can remove the filter condition above by deleting the tag.</li>
 			</ul>
 		</div>
 		<div id="chart" class="canvas draw fullwidth">

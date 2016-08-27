@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var student = require('../models/user.js');
+var Student = require('../models/user.js');
+var Msg = require('../models/msg.js');
 var allstates = require('../models/const.js').allstates;
 console.log("type of all states imported is "+typeof(allstates));
 
@@ -25,7 +26,7 @@ router.get('/graph/:filter', function(req, res, next) {
 });
 
 router.get('/people',function(req, res, next) { //render browsing table for all the students
-	student.find({}).exec(function(err, students) {
+	Student.find({}).exec(function(err, students) {
 		res.render('table', {'students':students});
 	});
 	
@@ -34,7 +35,7 @@ router.get('/people',function(req, res, next) { //render browsing table for all 
 router.get('/students/bystate/:state', function(req, res, next){
 	console.log('filter students by state '+req.params.state);
 	console.dir(req.body);
-	student.find({'RES': new RegExp(req.params.state, 'i')}).exec(function(err, students) {
+	Student.find({'RES': new RegExp(req.params.state, 'i')}).exec(function(err, students) {
 		var rt_students = [];
 		for(var i=0; i<students.length; i++){
 			console.log(students[i].RES.split(',')[1].replace(/ /g,''));
@@ -47,14 +48,14 @@ router.get('/students/bystate/:state', function(req, res, next){
 
 router.get('/students', function(req, res, next){
 	console.log('all students in');
-	student.find({}).exec(function(err, students) {
+	Student.find({}).exec(function(err, students) {
 		res.send(students);
 	});
 });
 
 router.get('/filterbystate', function(req, res, next){
 	console.log('in filterbystate');
-	student.find({'RES': new RegExp(req.body.state, 'i')}, function(err, docs){
+	Student.find({'RES': new RegExp(req.body.state, 'i')}, function(err, docs){
 		res.send(filteredstudents);
 	});
 })
@@ -71,7 +72,7 @@ router.get('/locationcount', function(req, res, next){
 	}
 
 	//test, suppose the session user is czf5234
-	student.find({}).exec(function(err, students) {
+	Student.find({}).exec(function(err, students) {
 		console.log("enter the student find");
 		if(err) {
 			handleError(err);
@@ -121,5 +122,26 @@ router.get('/map',function(req, res, next){
 	res.render('map');
 });
 
+router.post('/sendmsg', function(req, res, next){
+	console.log('saving msg, the req body is '+req.body);
+	console.dir(req.body);
+	console.dir(req.user);
+	var msg_item = req.body.msg, receiver = req.body.receiver, sender = req.user.toObject().student_id;
+	console.log('saving msg before create a temp');
+	var newMsg= new Msg({
+		'sender': sender,
+		'msg': msg_item,
+		'receiver': receiver,
+		'time': new Date()
+	});
+	console.log('saving msg after create a temp');
+	newMsg.save(function(err, newmsg) {
+		if (err) return console.error(err);
+		console.log("msg is saved");
+
+		res.send('successful saved msg as '+ newmsg);
+
+	});
+})
 
 module.exports = router;

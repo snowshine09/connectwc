@@ -54,20 +54,20 @@ app.use('/', routes);
 app.use('/users', users);
 
 
+// app.use('/', isLoggedIn, function(req, res, next) {
+//   console.log("home in router is " + req.session.passport.user);
+//   student.findOne({
+//     username: req.user.toObject().username
+//   }, 'topics', function(err, user) {
+//     if (err) handleError(err);
+    
+//     console.log("this is after logging in with middleware layer!");
+//     return next();
+//   });
 
+// });
 app.get('/', isLoggedIn, function(req, res) {
   console.log("home in router is " + req.session.passport.user);
-  // var newAct = new UserAct({
-  //  username: req.user.username,
-  //  type: "User enter home page"
-  // });
-  // newAct.save(function(err, nact) {
-  //  if (err) {
-  //    console.err(err);
-  //    console.log("err occurs when saving new user act");
-  //  }
-  //  console.log("new useract added");
-  // });
   student.findOne({
     username: req.user.toObject().username
   }, 'topics', function(err, user) {

@@ -16,23 +16,30 @@ console.log("all states imported is length "+allstatesArr);
 // router.get('/', function(req, res, next) {
 // 	res.render('index');
 // });
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    console.log("it is authenticated in is LoggedIn");
+    return next();
+  }
+  res.redirect('/login');
+}
 
-router.get('/graph', function(req, res, next) {
+router.get('/graph', isLoggedIn, function(req, res, next) {
 	res.render('connected');
 });
 
-router.get('/graph/:filter', function(req, res, next) {
+router.get('/graph/:filter', isLoggedIn, function(req, res, next) {
 	res.render('connected',req.params.filter);
 });
 
-router.get('/people',function(req, res, next) { //render browsing table for all the students
+router.get('/people', isLoggedIn, function(req, res, next) { //render browsing table for all the students
 	Student.find({}).exec(function(err, students) {
 		res.render('table', {'students':students});
 	});
 	
 })
 
-router.get('/students/bystate/:state', function(req, res, next){
+router.get('/students/bystate/:state', isLoggedIn, function(req, res, next){
 	console.log('filter students by state '+req.params.state);
 	console.dir(req.body);
 	Student.find({'RES': new RegExp(req.params.state, 'i')}).exec(function(err, students) {
@@ -53,7 +60,7 @@ router.get('/students', function(req, res, next){
 	});
 });
 
-router.get('/filterbystate', function(req, res, next){
+router.get('/filterbystate', isLoggedIn, function(req, res, next){
 	console.log('in filterbystate');
 	Student.find({'RES': new RegExp(req.body.state, 'i')}, function(err, docs){
 		res.send(filteredstudents);
@@ -118,7 +125,7 @@ router.get('/locationcount', function(req, res, next){
 
 });
 
-router.get('/map',function(req, res, next){
+router.get('/map',isLoggedIn, function(req, res, next){
 	res.render('map');
 });
 

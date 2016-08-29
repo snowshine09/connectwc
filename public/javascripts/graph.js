@@ -80,7 +80,15 @@ var svg = d3.select("#chart").append("svg")
   if(typeof(arr[0][linkType])=='object' || linkType=='goal'){
     for(var i=0; i<arr.length; i++){
       var arrayType = arr[i][linkType];
-      if(linkType=='goal') arrayType = arr[i][linkType].split(',');
+      if(linkType=='goal') {
+        if(!arr[i][linkType]){
+          if(arr[i]['goal_others']){
+            arrayType = [arr[i]['goal_others']];
+          }
+          else arrayType = ['not provided'];
+        }
+        else arrayType = arr[i][linkType].split(',');
+      }
       nodeIdx = nodeIdx+1;
 
       var snd = {
@@ -140,6 +148,14 @@ var svg = d3.select("#chart").append("svg")
 else { // linkType is a string
   for(var i=0; i<arr.length; i++){
     var commonAttr = arr[i][linkType];
+    if(linkType == 'age'){
+      var age_exact = arr[i][linkType];
+      if(age_exact<21) { commonAttr = '< 25' ;}
+      else if (age_exact<30) { commonAttr = '< 20' ;}
+      else if (age_exact<35) { commonAttr = '< 35' ;}
+      else if (age_exact<40) { commonAttr = '< 40' ;}
+      else { commonAttr = '>= 40' ;}
+    }
     nodeIdx = nodeIdx+1;
     
     var snd = {
@@ -200,13 +216,13 @@ else { // linkType is a string
 function update(LinkType, filters){
 
   var url_link = filters?"/students/bystate/"+filters:"/students";
-  console.log(url_link);
+  // console.log(url_link);
   $.ajax({
     url: url_link,
     method: "GET"
   })
   .done(function(studentsArr){
-    console.log(studentsArr.length);
+    // console.log(studentsArr.length);
     if(!studentsArr.length){
       $('.info').removeClass('hidden');
     }
@@ -245,7 +261,6 @@ function DrawGraph(nodes,links) {
   // Update nodes.
   var n = nodes.length; nodes.forEach(function(d, i) {
     if(d.student_id==sessionStorage['username']){
-      console.log('this is me, I am at' + d.x);
       d.x = width/2;
       d.y = height/2;
     }
@@ -269,7 +284,6 @@ function DrawGraph(nodes,links) {
  .style("fill", function(d){ 
   if(d.student_id!=sessionStorage['username']) return d.type!=='student'?"#FB9128":"#34B521"; 
   else {
-    console.log("this is red!!!")
     return "red";
   }
 });
@@ -305,7 +319,7 @@ var tooltip = d3.select("#chart")
   var stringHTML1 = 
   '<div class="ui centered aligned padded grid">',
   stringHTML2=
-  '</div><div class="ui blue button messageher" style="display: block">Click to message him/her!</div>';
+  '</div><div class="ui blue button messageher" style="display: block">Click the node to message him/her!</div>';
 
   svg.selectAll(".node.student")
   .attr("opacity", 1)
@@ -375,7 +389,7 @@ var tooltip = d3.select("#chart")
     .classed("hover", true)
     .attr("stroke", "#B30000")
     .attr("stroke-width", "0.5px");
-    console.log(self.node().getBoundingClientRect()['width']/2+"px");
+    // console.log(self.node().getBoundingClientRect()['width']/2+"px");
     // if(d.name){
       tooltip.html(stringHTML1 + '<div class="row"> There are <strong>&nbsp '+ (d.size) + ' </strong>&nbsp students connected through &nbsp<strong>'+  (d.name) +
         '</strong></div></div>')

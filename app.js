@@ -73,7 +73,8 @@ app.get('/', isLoggedIn, function(req, res) {
   }, 'topics', function(err, user) {
     if (err) handleError(err);
     
-    console.log("this is after logging in!");
+    console.log("this is after logging in!" );
+    console.dir(req.user);
     res.render('index.hbs', {
       name: req.user.toObject().name,
       username: req.user.toObject().student_id

@@ -89,6 +89,7 @@ var svg = d3.select("#chart").append("svg")
         }
         else arrayType = arr[i][linkType].split(',');
       }
+      
       nodeIdx = nodeIdx+1;
 
       var snd = {
@@ -137,14 +138,14 @@ var svg = d3.select("#chart").append("svg")
         else {
           tpc[arrayType[j]]['size']+=1;
 
-        links.push({
-          'source': tpc[arrayType[j]].idx,
-          'target': snd.idx
-        });
+          links.push({
+            'source': tpc[arrayType[j]].idx,
+            'target': snd.idx
+          });
+        }
       }
     }
   }
-}
 else { // linkType is a string
   for(var i=0; i<arr.length; i++){
     var commonAttr = arr[i][linkType];
@@ -155,6 +156,13 @@ else { // linkType is a string
       else if (age_exact<35) { commonAttr = '< 35' ;}
       else if (age_exact<40) { commonAttr = '< 40' ;}
       else { commonAttr = '>= 40' ;}
+    }
+
+    if (linkType=='timezone') {
+      if(!arr[i][linkType]){
+        commonAttr = 'not provided';
+      }
+      else commonAttr = (JSON.parse(arr[i][linkType])).zonename;
     }
     nodeIdx = nodeIdx+1;
     
@@ -202,15 +210,15 @@ else { // linkType is a string
     else {
       tpc[commonAttr]['size']+=1;
 
-        links.push({
-          'source': tpc[commonAttr].idx,
-          'target': snd.idx
-        });
-      }
-
+      links.push({
+        'source': tpc[commonAttr].idx,
+        'target': snd.idx
+      });
     }
+
   }
-  callback(nodes,links);
+}
+callback(nodes,links);
 }
 
 function update(LinkType, filters){
@@ -477,9 +485,6 @@ function tick() {
   // nodes[0].x = width / 2;
   // nodes[0].y = height / 2;
 }
-
-
-
 
 function color(d) {
   return d.group?"#3182bd":"#c6dbef";
